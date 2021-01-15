@@ -2,7 +2,7 @@
 
 ### Install 
 
-1. Download dmg file here
+1. Download dmg file [here](https://github.com/Frankmau5/flowers/blob/main/flowers.dmg) 
 
 2. Go to your download folder and double click on the file named flowers.dmg
 
