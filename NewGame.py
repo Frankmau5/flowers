@@ -17,6 +17,9 @@ class NewGame:
     def LoadModes(self):
         modes = dict()
         modes["MainMenu"] = MainMenu(self.Screen, self.ScreenWidth)
+        modes["EndScreen"] = EndScreen(self.Screen, self.ScreenWidth, 0)
+        modes["GameScreen"] = GameScreen(self.Screen, self.ScreenWidth)
+        
         return modes
 
     def StartMainLoop(self):
@@ -24,6 +27,26 @@ class NewGame:
             if self.GameMode == "MainMenu":
                 self.Modes["MainMenu"].Draw()
                 self.Modes["MainMenu"].Update()
+
+            if self.GameMode == "EndScreen":
+                self.Modes["EndScreen"].Draw()
+                self.Modes["EndScreen"].Update()
+
+            if self.GameMode == "GameScreen":
+                self.Modes["GameScreen"].Draw()
+                self.Modes["GameScreen"].Update()
+
+            self.CheckIfScreenChange()
+
+
+    def CheckIfScreenChange(self):
+        if self.Modes[self.GameMode].ScreenNeedsToChange:
+            screenName = self.Modes[self.GameMode].ScreenToChangeToo
+            self.GameMode = screenName
+            
+            # reset the screen change back to start
+            self.Modes[self.GameMode].ScreenToChangeToo = ""
+            self.Modes[self.GameMode].ScreenNeedsToChange = False
 
     def GetFonts(self):
         for f in pygame.font.get_fonts():
@@ -34,8 +57,9 @@ class MainMenu(object):
         self.CurrentScreen = screen
         self.ScreenWidth = sWidth
         self.Background = None
-        self.TextColor = 255,255,255
-        #self.TextColor = 231,111,81
+        self.ScreenNeedsToChange = False
+        self.ScreenToChangeToo = ""
+        self.TextColor = 110, 68, 255
         self.Load()
         
 
@@ -44,17 +68,17 @@ class MainMenu(object):
         self.FontBig = pygame.font.Font("fonts/SanMarinoBeach.ttf",82)
         self.FontSmall = pygame.font.Font("fonts/SanMarinoBeach.ttf",38)
         self.GameNameWidth = (self.ScreenWidth / 2) - 240
+    
     def ClearScreen(self):
         black = 0, 0, 0
         self.CurrentScreen.fill(black)
-        pygame.display.update()
 
     def Draw(self):
         GameName = self.FontBig.render(f"Flowers", 1, self.TextColor)
         StartGame = self.FontSmall.render(f"Press space to start!", 1, self.TextColor)
 
         self.CurrentScreen.blit(self.Background, (0,0))
-        self.CurrentScreen.blit(GameName, ((self.GameNameWidth + 50), 10))
+        self.CurrentScreen.blit(GameName, ((self.GameNameWidth + 40), 10))
         self.CurrentScreen.blit(StartGame, (self.GameNameWidth, 650))
         pygame.display.update()
 
@@ -65,34 +89,80 @@ class MainMenu(object):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     print("Space")
-
-
-
+                    self.ScreenNeedsToChange = True
+                    self.ScreenToChangeToo = "GameScreen"
 
 
 class EndScreen(object):
-    def __init__(self):
-        pass
+    def __init__(self, screen, sWidth, score):
+        self.CurrentScreen = screen
+        self.ScreenWidth = sWidth
+        self.UserScore = score
+        self.ScreenNeedsToChange = False
+        self.ScreenToChangeToo = ""
+        self.Background = None
+        self.TextColor = 110, 68, 255
+        self.Load()
+
+
+    def Load(self):
+        self.Background = pygame.image.load("imgs/background-main-menu.png")
+        self.FontBig = pygame.font.Font("fonts/SanMarinoBeach.ttf",82)
+        self.FontSmall = pygame.font.Font("fonts/SanMarinoBeach.ttf",38)
+        self.GameNameWidth = (self.ScreenWidth / 2) - 240
+    
+    def ClearScreen(self):
+        black = 0, 0, 0
+        self.CurrentScreen.fill(black)
 
     def Draw(self):
-        s_label = self.font.render("Score {}".format(self.score), 1, self.white)
-        msg = self.font.render("Your score was {}.".format(self.score), 1, self.black)
-        msg2 = self.font.render("Press esc to quit or press space to start again",1,self.black)
-        self.screen.fill(self.white)
-        self.screen.blit(self.background, (0,0))
-        self.screen.blit(s_label, (1080,10))
-        self.screen.blit(msg, (320,360))
-        self.screen.blit(msg2,(320,380))
+        msg1 = self.FontBig.render(f"Your score was {self.UserScore}", 1, self.TextColor)
+        msg2 = self.FontSmall.render("Press esc to quit game or press space to start again",1,self.TextColor)
+
+        self.ClearScreen()
+        self.CurrentScreen.blit(self.Background, (0,0))
+        self.CurrentScreen.blit(msg1, (10,120))
+        self.CurrentScreen.blit(msg2,(10,600))
+        pygame.display.update()
 
     def Update(self):
-        pass
+       for event in pygame.event.get():
+            if event.type == pygame.QUIT: sys.exit()
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    print("Space")
+                    self.ScreenNeedsToChange = True
+                    self.ScreenToChangeToo = "MainMenu"
+
 
 class GameScreen(object):
-    def __init__(self):
-        pass
+    def __init__(self, screen, sWidth, score=0):
+        self.CurrentScreen = screen
+        self.ScreenWidth = sWidth
+        self.UserScore = score
+        self.ScreenNeedsToChange = False
+        self.ScreenToChangeToo = ""
+        self.Background = None
+        self.TextColor = 110, 68, 255
+        self.Load()
+
+
+    def Load(self):
+        self.Background = pygame.image.load("imgs/background-main-menu.png")
+        self.FontBig = pygame.font.Font("fonts/SanMarinoBeach.ttf",82)
+        self.FontSmall = pygame.font.Font("fonts/SanMarinoBeach.ttf",38)
+        self.GameNameWidth = (self.ScreenWidth / 2) - 240
+    
+    def ClearScreen(self):
+        black = 0, 0, 0
+        self.CurrentScreen.fill(black)
+
 
     def Draw(self):
-        pass
+        self.CurrentScreen.blit(self.Background, (0,0))
+        pygame.display.update()
 
     def Update(self):
-        pass
+       for event in pygame.event.get():
+            if event.type == pygame.QUIT: sys.exit()
