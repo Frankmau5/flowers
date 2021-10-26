@@ -14,28 +14,36 @@ class Game:
         self.matches = []
         self.score = 0
         self.seconds = 0
-        self.gamemode = "start"
+        self.gamemode = "MainMenu"
         self.end_time = 600
         self.version = "0.1.0-01.21"
 
         pygame.init()
         print("pygame loaded")
-        self.font = pygame.font.SysFont("verdana",22)
-        self.font2 = pygame.font.SysFont("verdana",16)
-        self.screen = pygame.display.set_mode([self.screen_width, self.screen_hight], pygame.FULLSCREEN)
-        self.board = self.mk_board()
-        self.background = pygame.image.load("background0.png")
-        self.white = pygame.Color(255,255,255)
-        self.black = pygame.Color(0,0,0)
-        self.title = self.mk_title()
-        self.start_text = self.mk_start()
-        self.start_btn = pygame.Surface((225,37))
-        self.start_text_x = 520 
-        self.start_text_y = 280
-        self.start_rect = self.start_btn.get_rect(center=(self.start_text_x,self.start_text_y))
-        self.start_time = 0
+        #self.font = pygame.font.SysFont("verdana",22)
+        #self.font2 = pygame.font.SysFont("verdana",16)
+        self.screen = pygame.display.set_mode([self.screen_width, self.screen_hight])
+        #self.board = self.mk_board()
+        #self.background = pygame.image.load("background0.png")
+        #self.white = pygame.Color(255,255,255)
+        #self.black = pygame.Color(0,0,0)
+        #self.title = self.mk_title()
+        #self.start_text = self.mk_start()
+        #self.start_btn = pygame.Surface((225,37))
+        #self.start_text_x = 520 
+        #self.start_text_y = 280
+        #self.start_rect = self.start_btn.get_rect(center=(self.start_text_x,self.start_text_y))
+        #self.start_time = 0
         print("game loaded")
         
+        self.MenuScreen = MainMenu(self.screen)
+
+    def StartMainLoop(self):
+        while self.running:
+            if self.gamemode == "MainMenu":
+                self.MenuScreen.Draw()
+                self.MenuScreen.Update()
+                
 
     def run_mainloop(self):
         clock_fps = pygame.time.Clock()
@@ -48,30 +56,29 @@ class Game:
                 pygame.display.update()
                 self.process_input()
 
-            if self.gamemode == "end":
-                self.end_draw()
-                pygame.display.update()
-                self.process_input()
-
-            if self.gamemode == "game":
-                self.draw()
-                pygame.display.update()
-                self.process_input()
-                self.check_clicked_flowers()
-                self.check_board()
-            
-                self.seconds = (pygame.time.get_ticks() - self.start_time) /1000
-                if self.seconds > self.end_time:
-                    #End game
-                    self.gamemode = "end"
-            
-                if self.count < 10:
-                    self.score = 0
-                    self.count +=1
-
+#            if self.gamemode == "end":
+#                self.end_draw()
+#                pygame.display.update()
+#                self.process_input()
+#
+#            if self.gamemode == "game":
+#                self.draw()
+#                pygame.display.update()
+#                self.process_input()
+#                self.check_clicked_flowers()
+#                self.check_board()
+#            
+#                self.seconds = (pygame.time.get_ticks() - self.start_time) / 1000
+#                if self.seconds > self.end_time:
+#                    #End game
+#                    self.gamemode = "end"
+#            
+#                if self.count < 10:
+#                    self.score = 0
+#                    self.count +=1
+#
             clock_fps.tick(30)
         pygame.quit()
-
 
     def draw(self):
         x = 775
@@ -80,7 +87,7 @@ class Game:
         s_label = self.font.render("Score {}".format(self.score), 1, self.white)
         t = int(self.seconds)
         tt = self.end_time - t
-        c_min = int(tt /60)
+        c_min = int(tt / 60)
         c_sec = int(tt % 60)
         timer_label = self.font.render("Time {}:{}".format(c_min,c_sec),1, self.white)
 
@@ -123,10 +130,8 @@ class Game:
                 if self.gamemode == "end":
                     if event.key == pygame.K_SPACE:
                         self.restart_game()
-                        self.end_time = (pygame.time.get_ticks() + (600 * 1000)) /1000
+                        self.end_time = (pygame.time.get_ticks() + (600 * 1000)) / 1000
                         self.gamemode = "game"
-
-
 
     def check_clicked_flowers(self):
         if len(self.clicked_flowers) == 2:
@@ -143,22 +148,21 @@ class Game:
         for row in range(self.board_row - 2):
             for col in range(self.board_col):
 
-                if self.board[row][col].name == self.board[row + 1][col].name and self.board[row][col].name == self.board[row +2][col].name:
-                    a = [(row,col),(row+1,col),(row+2,col)]
+                if self.board[row][col].name == self.board[row + 1][col].name and self.board[row][col].name == self.board[row + 2][col].name:
+                    a = [(row,col),(row + 1,col),(row + 2,col)]
                     self.matches.append(a)
                     self.score += 75
         
         self.replace_matches()
-        # check cols 
+        # check cols
         for col in range(self.board_col - 2):
             for row in range(self.board_row):
 
-                if self.board[row][col].name == self.board[row][col+ 1].name and self.board[row][col].name == self.board[row][col + 2].name:
-                    a = [(row,col),(row,col+1), (row, col+2)]
+                if self.board[row][col].name == self.board[row][col + 1].name and self.board[row][col].name == self.board[row][col + 2].name:
+                    a = [(row,col),(row,col + 1), (row, col + 2)]
                     self.matches.append(a)
                     self.score += 64
         self.replace_matches()
-
 
     def replace_matches(self):
         for m in self.matches:
@@ -174,7 +178,6 @@ class Game:
                     count +=1
         self.matches.clear()
 
-    
     def move_flowers(self):
         one_row, one_col = self.clicked_flowers[0]
         two_row, two_col = self.clicked_flowers[1]
@@ -194,51 +197,22 @@ class Game:
         img = None
         sprit = None
         if num == 0:
-            img  = pygame.image.load("flower-r.png")
+            img = pygame.image.load("flower-r.png")
             sprit = Flower("red")
         if num == 1:
-            img  = pygame.image.load("flower-b.png")
+            img = pygame.image.load("flower-b.png")
             sprit = Flower("blue")
         if num == 2:
-            img  = pygame.image.load("flower-p.png")
+            img = pygame.image.load("flower-p.png")
             sprit = Flower("purple")
         if num == 3:
-            img  = pygame.image.load("flower-y.png")
+            img = pygame.image.load("flower-y.png")
             sprit = Flower("yellow")
         if num == 4:
             img = pygame.image.load("flower-g.png")
-            sprit= Flower("green")
+            sprit = Flower("green")
         sprit.set_surf(img)
         return sprit
-
-    def end_draw(self):
-        s_label = self.font.render("Score {}".format(self.score), 1, self.white)
-        msg = self.font.render("Your score was {}.".format(self.score), 1, self.black)
-        msg2 = self.font.render("Press esc to quit or press space to start again",1,self.black)
-        self.screen.fill(self.white)
-        self.screen.blit(self.background, (0,0))
-        self.screen.blit(s_label, (1080,10))
-        self.screen.blit(msg, (320,360))
-        self.screen.blit(msg2,(320,380))
-
-    def menu_draw(self):
-        self.screen.blit(self.background, (0,0))
-        version_msg = self.font2.render("version {}".format(self.version), 1, self.white)
-        me = self.font2.render("made by Frank Mulvie",1,self.white)
-        x = 520
-        y = 200
-        for l in self.title:
-            self.screen.blit(l,(x,y))
-            x += 35
-        
-        self.start_text_x = 520
-
-        for item in self.start_text:
-            self.screen.blit(item,(self.start_text_x,self.start_text_y))
-            self.start_text_x += 35
-
-        self.screen.blit(version_msg,(1000,10))
-        self.screen.blit(me,(1000,30))
 
     def restart_game(self):
         self.screen_width = 1280
@@ -257,30 +231,75 @@ class Game:
         self.start_time = 0
         self.count = 0
 
-    def mk_title(self):
-        f = pygame.image.load("f.png")
-        l = pygame.image.load("l.png")
-        o = pygame.image.load("o.png")
-        w = pygame.image.load("w.png")
-        e = pygame.image.load("e.png")
-        r = pygame.image.load("r.png")
-        s = pygame.image.load("s.png")
-        return [f,l,o,w,e,r,s]
 
-    def mk_start(self):
-        s = pygame.image.load("s.png")
-        t = pygame.image.load("t.png")
-        a = pygame.image.load("a.png")
-        r = pygame.image.load("r.png")
-        t = pygame.image.load("t.png")
-        return [s,t,a,r,t]
-        pass
 
-### helpers 
+### helpers
     def get_fonts(self):
         for f in pygame.font.get_fonts():
             print(f)
+    
 
+
+class MainMenu(object):
+    def __init__(self, screen):
+        self.Screen = screen
+        self.Load()
+
+    def Load(self):
+        self.Background = pygame.image.load("background0.png")
+
+    def Draw(self):
+        self.Screen.blit(self.Background, (0,0))
+
+    def Update(self):
+        pass
+
+    def MenuDraw(self):
+        self.screen.blit(self.background, (0,0))
+        version_msg = self.font2.render("version {}".format(self.version), 1, self.white)
+        me = self.font2.render("made by Frank Mulvie",1,self.white)
+        x = 520
+        y = 200
+        for l in self.title:
+            self.screen.blit(l,(x,y))
+            x += 35
+        
+        self.start_text_x = 520
+
+        for item in self.start_text:
+            self.screen.blit(item,(self.start_text_x,self.start_text_y))
+            self.start_text_x += 35
+
+        self.screen.blit(version_msg,(1000,10))
+        self.screen.blit(me,(1000,30))
+
+
+class EndScreen(object):
+    def __init__(self):
+        pass
+
+    def Draw(self):
+        s_label = self.font.render("Score {}".format(self.score), 1, self.white)
+        msg = self.font.render("Your score was {}.".format(self.score), 1, self.black)
+        msg2 = self.font.render("Press esc to quit or press space to start again",1,self.black)
+        self.screen.fill(self.white)
+        self.screen.blit(self.background, (0,0))
+        self.screen.blit(s_label, (1080,10))
+        self.screen.blit(msg, (320,360))
+        self.screen.blit(msg2,(320,380))
+
+    def Update(self):
+        pass
+
+class GameScreen(object):
+    def __init__(self):
+        pass
+
+    def Draw(self):
+        pass
+
+    def Update(self):
+        pass
 
 class Flower(pygame.sprite.Sprite):
     def __init__(self,name):
