@@ -1,9 +1,9 @@
 import game
+from NewGame import NewGame
 
 def main():
-    g = game.Game()
-    g.StartMainLoop()
-    #g.run_mainloop()
+    ng = NewGame()
+    ng.StartMainLoop()
 
 if __name__ == "__main__":
     main()

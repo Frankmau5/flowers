@@ -240,66 +240,6 @@ class Game:
     
 
 
-class MainMenu(object):
-    def __init__(self, screen):
-        self.Screen = screen
-        self.Load()
-
-    def Load(self):
-        self.Background = pygame.image.load("background0.png")
-
-    def Draw(self):
-        self.Screen.blit(self.Background, (0,0))
-
-    def Update(self):
-        pass
-
-    def MenuDraw(self):
-        self.screen.blit(self.background, (0,0))
-        version_msg = self.font2.render("version {}".format(self.version), 1, self.white)
-        me = self.font2.render("made by Frank Mulvie",1,self.white)
-        x = 520
-        y = 200
-        for l in self.title:
-            self.screen.blit(l,(x,y))
-            x += 35
-        
-        self.start_text_x = 520
-
-        for item in self.start_text:
-            self.screen.blit(item,(self.start_text_x,self.start_text_y))
-            self.start_text_x += 35
-
-        self.screen.blit(version_msg,(1000,10))
-        self.screen.blit(me,(1000,30))
-
-
-class EndScreen(object):
-    def __init__(self):
-        pass
-
-    def Draw(self):
-        s_label = self.font.render("Score {}".format(self.score), 1, self.white)
-        msg = self.font.render("Your score was {}.".format(self.score), 1, self.black)
-        msg2 = self.font.render("Press esc to quit or press space to start again",1,self.black)
-        self.screen.fill(self.white)
-        self.screen.blit(self.background, (0,0))
-        self.screen.blit(s_label, (1080,10))
-        self.screen.blit(msg, (320,360))
-        self.screen.blit(msg2,(320,380))
-
-    def Update(self):
-        pass
-
-class GameScreen(object):
-    def __init__(self):
-        pass
-
-    def Draw(self):
-        pass
-
-    def Update(self):
-        pass
 
 class Flower(pygame.sprite.Sprite):
     def __init__(self,name):
