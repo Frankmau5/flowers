@@ -1,4 +1,3 @@
-import game
 from NewGame import NewGame
 
 def main():
