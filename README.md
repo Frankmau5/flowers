@@ -16,7 +16,7 @@
   * 💥 **Bloom Bomb (6+ or L/T-Match):** Detonates a **3×3** petal blast around itself!
 * **Level Progression & Time Bonuses:** Fill your level progress bar to advance to higher levels and earn **+25s** time extensions to keep your run alive.
 * **Custom Visual Shaders & Particle Effects:** Enjoy glowing neon board borders, animated sunbeams, drifting pollen particles, shimmering selection auras, and petal-burst explosions.
-* **Smart Hints, Board Shuffles & High Scores:** Stuck on a tricky board? Wait 5 seconds for an automatic wiggle hint, hit **Shuffle (`R`)** for a fresh layout, and compete to beat your **Top 5 High Scores**!
+* **Smart Hints, Board Shuffles & High Scores:** Stuck on a tricky board? Wait 6 seconds for an automatic wiggle hint, hit **Shuffle (`R`)** for a fresh layout, and compete to beat your **Top 5 High Scores**!
 
 ---
 

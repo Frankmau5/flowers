@@ -1080,7 +1080,7 @@ class GameScreen(object):
             ("Rainbow (5-Match):", "Clears every flower of its color across the entire board!", (255, 195, 245)),
             ("Bloom Bomb (6+ / L-T):", "Blasts a 3x3 area of flowers around the bomb!", (160, 255, 210)),
             ("Combos & Levels:", "Chain cascades boost your multiplier (2x, 3x...). Level up for +25s!", (245, 235, 255)),
-            ("Hints & Shuffle:", "Wait 5s for an auto-hint wiggle, or press [R] / Shuffle when stuck.", (220, 215, 255)),
+            ("Hints & Shuffle:", "Wait 6s for an auto-hint wiggle, or press [R] / Shuffle when stuck.", (220, 215, 255)),
         ]
 
         y_cursor = my + 110
@@ -1317,7 +1317,7 @@ class GameScreen(object):
             self.DeleteAndReplaceFlowers()
             if not self.IsFalling and not self.ShowHowToPlay:
                 now = pygame.time.get_ticks()
-                if self.HintPair is None and now - self.LastActionTime > 5000:
+                if self.HintPair is None and now - self.LastActionTime > 6000:
                     self.HintPair = self.FindHintMove()
                     if self.HintPair is None:
                         self.ShuffleBoard()
