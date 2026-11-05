@@ -21,8 +21,8 @@ android {
         applicationId = "com.frankmulvie.flowers"
         minSdk = 24
         targetSdk = 34
-        versionCode = 92
-        versionName = "0.9.2"
+        versionCode = 100
+        versionName = "1.0.0"
     }
 
     buildTypes {

@@ -1263,7 +1263,7 @@ class FlowersGameView(context: Context) : View(context) {
                 canvas,
                 typeface,
                 36f,
-                "Version 0.9.2",
+                "Version 1.0.0",
                 mx,
                 my + 125f,
                 mainColor = Color.rgb(180, 240, 255),

@@ -9,6 +9,14 @@ import pygame
 import random
 import sys
 import webbrowser
+
+if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+    _SAVE_DIR = os.path.dirname(os.path.abspath(sys.executable))
+    os.chdir(sys._MEIPASS)
+else:
+    _SAVE_DIR = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(_SAVE_DIR)
+
 #pyinstaller -F --add-data 'imgs\*;.'  .\main.py
 class NewGame:
     def __init__(self):
@@ -157,7 +165,7 @@ class SoundFX(object):
 
 
 class HighScoreManager(object):
-    FILE_PATH = "highscores.json"
+    FILE_PATH = os.path.join(_SAVE_DIR, "highscores.json")
 
     @classmethod
     def LoadScores(cls):
@@ -565,7 +573,7 @@ class MainMenu(object):
             self.Shader.DrawGlowText(
                 self.CurrentScreen,
                 self.FontSmall,
-                "Version 0.9.2",
+                "Version 1.0.0",
                 mx,
                 my + 125,
                 main_color=(180, 240, 255),
