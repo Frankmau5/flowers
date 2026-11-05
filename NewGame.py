@@ -3,9 +3,12 @@ import json
 import math
 import os
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
+os.environ.setdefault("PULSE_PROP_application.name", "Flowers")
+os.environ.setdefault("SDL_AUDIO_DEVICE_APP_NAME", "Flowers")
 import pygame
 import random
 import sys
+import webbrowser
 #pyinstaller -F --add-data 'imgs\*;.'  .\main.py
 class NewGame:
     def __init__(self):
@@ -87,22 +90,22 @@ class SoundFX(object):
             if not pygame.mixer.get_init():
                 pygame.mixer.init(frequency=22050, size=-16, channels=1, buffer=512)
             self.Enabled = True
-            self.Sounds["select"] = self._make_tone([660], 0.06, 0.35)
-            self.Sounds["swap"] = self._make_tone([440, 554], 0.055, 0.35)
-            self.Sounds["shuffle"] = self._make_tone([330, 440, 554, 660], 0.05, 0.35)
-            self.Sounds["tick"] = self._make_tone([880], 0.05, 0.28)
-            self.Sounds["levelup"] = self._make_tone([523, 659, 784, 1046], 0.085, 0.42)
-            self.Sounds["gameover"] = self._make_tone([659, 587, 523, 392], 0.12, 0.42)
-            self.Sounds["zap"] = self._make_tone([1320, 988, 1568, 784, 1760], 0.045, 0.45)
-            self.Sounds["rainbow"] = self._make_tone([523, 659, 784, 988, 1175, 1318, 1568], 0.045, 0.45)
-            self.Sounds["bomb"] = self._make_bomb_sound(0.32, 0.55)
+            self.Sounds["select"] = self._make_tone([660], 0.065, 0.65)
+            self.Sounds["swap"] = self._make_tone([440, 554], 0.06, 0.65)
+            self.Sounds["shuffle"] = self._make_tone([330, 440, 554, 660], 0.055, 0.65)
+            self.Sounds["tick"] = self._make_tone([880], 0.055, 0.55)
+            self.Sounds["levelup"] = self._make_tone([523, 659, 784, 1046], 0.09, 0.75)
+            self.Sounds["gameover"] = self._make_tone([659, 587, 523, 392], 0.12, 0.75)
+            self.Sounds["zap"] = self._make_tone([1320, 988, 1568, 784, 1760], 0.05, 0.75)
+            self.Sounds["rainbow"] = self._make_tone([523, 659, 784, 988, 1175, 1318, 1568], 0.05, 0.75)
+            self.Sounds["bomb"] = self._make_bomb_sound(0.35, 0.85)
             for combo in range(1, 8):
                 base = 440 * (1.12 ** (combo - 1))
-                self.Sounds[f"match_{combo}"] = self._make_tone([base, base * 1.25, base * 1.5], 0.065, 0.4)
+                self.Sounds[f"match_{combo}"] = self._make_tone([base, base * 1.25, base * 1.5], 0.07, 0.72)
         except Exception:
             self.Enabled = False
 
-    def _make_tone(self, freqs, duration_per_note, volume=0.35):
+    def _make_tone(self, freqs, duration_per_note, volume=0.65):
         init_info = pygame.mixer.get_init()
         sample_rate = init_info[0] if init_info else 44100
         channels = init_info[2] if init_info else 2
@@ -110,11 +113,15 @@ class SoundFX(object):
         for freq in freqs:
             n_samples = int(sample_rate * duration_per_note)
             for i in range(n_samples):
-                env = 1.0 - (i / max(1, n_samples))
-                val = int(32767 * volume * env * math.sin(2.0 * math.pi * freq * i / sample_rate))
+                t = i / sample_rate
+                env = (1.0 - (i / max(1, n_samples))) ** 0.8
+                wave = 0.75 * math.sin(2.0 * math.pi * freq * t) + 0.25 * math.sin(4.0 * math.pi * freq * t)
+                val = max(-32767, min(32767, int(32767 * volume * env * wave)))
                 for _ in range(channels):
                     buf.append(val)
-        return pygame.mixer.Sound(buffer=buf.tobytes())
+        snd = pygame.mixer.Sound(buffer=buf.tobytes())
+        snd.set_volume(1.0)
+        return snd
 
     def _make_bomb_sound(self, duration=0.32, volume=0.55):
         init_info = pygame.mixer.get_init()
@@ -133,7 +140,9 @@ class SoundFX(object):
             val = max(-32767, min(32767, int(32767 * volume * env * (0.72 * boom + 0.28 * noise))))
             for _ in range(channels):
                 buf.append(val)
-        return pygame.mixer.Sound(buffer=buf.tobytes())
+        snd = pygame.mixer.Sound(buffer=buf.tobytes())
+        snd.set_volume(1.0)
+        return snd
 
     def Play(self, name):
         if self.Enabled and name in self.Sounds:
@@ -423,6 +432,7 @@ class MainMenu(object):
         self.TitleRect = pygame.Rect(440, 20, 400, 105)
         self.TitleClickTimes = list()
         self.ShowCreditsModal = False
+        self.CreditsUrlRect = pygame.Rect(440, 355, 400, 42)
         self.HighScores = HighScoreManager.LoadScores()
         self.Shader = ScreenShader(sWidth, 720)
         self.Load()
@@ -537,7 +547,7 @@ class MainMenu(object):
             dim = pygame.Surface((self.ScreenWidth, 720), pygame.SRCALPHA)
             dim.fill((12, 6, 30, 185))
             self.CurrentScreen.blit(dim, (0, 0))
-            mw, mh = 680, 280
+            mw, mh = 680, 330
             mx = int((self.ScreenWidth - mw) / 2)
             my = int((720 - mh) / 2)
             self.Shader.DrawGlowPanel(self.CurrentScreen, mx, my, mw, mh, hovered=True)
@@ -546,7 +556,7 @@ class MainMenu(object):
                 self.FontBig,
                 "Made by Frank Mulvie",
                 mx,
-                my + 35,
+                my + 30,
                 main_color=(255, 240, 150),
                 offset=3,
                 max_width=mw - 48,
@@ -557,8 +567,21 @@ class MainMenu(object):
                 self.FontSmall,
                 "Version 0.9.2",
                 mx,
-                my + 135,
+                my + 125,
                 main_color=(180, 240, 255),
+                offset=2,
+                max_width=mw - 48,
+                center_width=mw,
+            )
+            self.CreditsUrlRect = pygame.Rect(mx + 120, my + 180, mw - 240, 44)
+            url_hovered = self.CreditsUrlRect.collidepoint(pygame.mouse.get_pos())
+            self.Shader.DrawGlowText(
+                self.CurrentScreen,
+                self.FontSmall,
+                "https://knrf.itch.io/",
+                mx,
+                my + 185,
+                main_color=(255, 235, 140) if url_hovered else (255, 185, 245),
                 offset=2,
                 max_width=mw - 48,
                 center_width=mw,
@@ -568,7 +591,7 @@ class MainMenu(object):
                 self.FontSub,
                 "Click anywhere or press Space to close",
                 mx,
-                my + 205,
+                my + 255,
                 main_color=(230, 225, 255),
                 offset=2,
                 max_width=mw - 48,
@@ -622,7 +645,10 @@ class MainMenu(object):
                 elif event.type == pygame.MOUSEBUTTONUP:
                     if self.Sound:
                         self.Sound.Play("select")
-                    self.ShowCreditsModal = False
+                    if self.CreditsUrlRect.collidepoint(event.pos):
+                        webbrowser.open("https://knrf.itch.io/")
+                    else:
+                        self.ShowCreditsModal = False
                 continue
             
             if event.type == pygame.KEYDOWN:

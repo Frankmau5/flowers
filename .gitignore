@@ -131,3 +131,12 @@ dmypy.json
 .vs/flowers/v16/.suo
 .vs/slnx.sqlite
 .vs/VSWorkspaceState.json
+
+# Android / Gradle build outputs
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+*.iml
+
