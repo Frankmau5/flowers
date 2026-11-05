@@ -11,9 +11,9 @@
 * **8-Direction Freedom (Including Diagonals!):** Unlike traditional match-3 games that lock you into 4 directions, **Flowers** lets you swap neighboring blooms horizontally, vertically, *or diagonally*—using either quick click-and-drag gestures or classic two-click selection.
 * **Cascading Combos & Gravity:** Watch blossoms tumble into place as cleared rows trigger chain reactions that multiply your score (`2x`, `3x`, and beyond!).
 * **Explosive Power-Up Blooms:**
-  * ☀️ **Sunburst Flower (4-Match):** Sweeps across the board to clear its entire row and column, plus grants **+3s** bonus time!
+  * ⚡ **Zap Flower (4-Match):** Sweeps across the board to clear its entire row and column!
   * 🌈 **Rainbow Flower (5-Match):** Clears every flower of its color across the entire board at once!
-  * 💥 **Bloom Bomb (6+ or L/T-Match):** Detonates a **3×3** petal blast around itself!
+  * 💥 **Bloom Bomb (6+ or L/T-Match):** Detonates a **5×5** petal blast around itself!
 * **Level Progression & Time Bonuses:** Fill your level progress bar to advance to higher levels and earn **+25s** time extensions to keep your run alive.
 * **Custom Visual Shaders & Particle Effects:** Enjoy glowing neon board borders, animated sunbeams, drifting pollen particles, shimmering selection auras, and petal-burst explosions.
 * **Smart Hints, Board Shuffles & High Scores:** Stuck on a tricky board? Wait 6 seconds for an automatic wiggle hint, hit **Shuffle (`R`)** for a fresh layout, and compete to beat your **Top 5 High Scores**!
