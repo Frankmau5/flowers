@@ -4,6 +4,7 @@
 
 ## 📥 Downloads (Release v1.0.0)
 
+you can play at (https://knrf.itch.io/flowers)
 Grab the latest standalone builds directly from the [**GitHub Releases (v1.0.0)**](https://github.com/Frankmau5/flowers/releases/tag/v1.0.0) page:
 
 * 🪟 **Windows Desktop:** `Flowers-Windows.exe` (Standalone single-file executable)
